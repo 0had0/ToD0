@@ -8,7 +8,8 @@ import {addTodo, delTodo, editTodo} from '../actions/index';
 import {
     TextField,
     Button,
-    Box
+    Box,
+    List
 } from '@material-ui/core';
 
 const Show = props => {
@@ -16,15 +17,20 @@ const Show = props => {
     const [history, setHistory] = useState([]);
 
     const store = props.store ;
-    
+
     function componentDidMount() {
         store.subscribe(() => console.log(props.store.getState()));
     }
-    
 
-    
+
+
 
     const useStyless = makeStyles(theme => ({
+        root: {
+          width: '100%',
+          maxWidth: 360,
+          backgroundColor: theme.palette.background.paper,
+        },
         padd: {
             padding: theme.spacing(3, 2),
             display: 'flex',
@@ -60,32 +66,33 @@ const Show = props => {
             <Container className={
                 classes.padd
             }>
-                <Box position='static' display='flex' flexDirection='row'>
+                <Box position='static' display='flex' flexDirection='row' alignItems='flex-end'>
                     <TextField id="normal-textarea" label="ToDo ..." placeholder="Memorizable thing ;)"
                         value={elm}
                         margin="normal"
                         onChange={
-                            handleChange    
-                        }/>
-                    <Button variant='outlined' size="small" color='primary' 
+                            handleChange
+                        } required/>
+                      <Button size="small" color='primary'
                         onClick={
                             handleAdd
                     }>
                         Add
                     </Button>
-                    <Button variant='outlined' size="small" color='primary' 
+                      <Button size="small" color='primary'
                         onClick={
                             () => {console.log(props.store.getState())}
                     }>
                         Store
                     </Button>
-                    <Button variant='outlined' size="small" color='primary' 
+                      <Button size="small" color='primary'
                         onClick={
                             () => {console.log(history)}
                     }>
                         History
                     </Button>
                 </Box>
+                <List className={classes.root}>
                 {
                 store.getState().map((item, i) => {
                     return (
@@ -97,7 +104,8 @@ const Show = props => {
                             handleDel={handleDel}/>
                     )
                 })
-            } </Container>
+            } </List>
+          </Container>
         </React.Fragment>
     );
 }
