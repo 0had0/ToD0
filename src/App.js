@@ -3,12 +3,11 @@ import React from 'react';
 import '../node_modules/@material-ui/core/umd/material-ui.development.js';
 import '../node_modules/@material-ui/core/umd/material-ui.production.min.js';
 
-import './App.css';
 import Show from './components/show';
 import Nav from './components/nav';
 
 const App = props => {
-    
+
     return (
         <div className="App">
             <Nav/>
