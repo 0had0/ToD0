@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import uuidv1 from "uuid/v1";
@@ -11,10 +11,15 @@ const Show = props => {
   const [elm, setElm] = useState("");
   const [history, setHistory] = useState([]);
 
-  const store = props.store;
+  const store = props.store.getState();
+  useEffect(() => {
+    localStorage.setItem("store", JSON.stringify(store));
+  }, [store]);
 
   function componentDidMount() {
     store.subscribe(() => console.log(props.store.getState()));
+    // if (!JSON.parse(localStorage.getItem("store")))
+    //   localStorage.setItem("store", JSON.stringify(props.store.getState()));
   }
 
   const useStyless = makeStyles(theme => ({
@@ -35,21 +40,21 @@ const Show = props => {
   const classes = useStyless();
 
   const handleDel = item => {
-    console.log("Remove button is clicked");
-    console.log(`id: ${item.id}`);
-    setHistory([...history, { operation: "Delete", item }]);
     props.store.dispatch(delTodo(item.id));
+    setHistory([...history, { operation: "Delete", item }]);
+    // localStorage.setItem("store", JSON.stringify(store));
   };
   const handleEdit = item => {
-    store.dispatch(editTodo(item));
+    props.store.dispatch(editTodo(item));
     setHistory([...history, { operation: "Edit", item }]);
+    // localStorage.setItem("store", JSON.stringify(store));
   };
   const handleAdd = () => {
-    console.log("Add button Clicked");
     props.store.dispatch(
       addTodo({ id: uuidv1(), content: elm, visiblity: true })
     );
     setElm("");
+    // localStorage.setItem("store", JSON.stringify(store));
   };
   const handleChange = event => {
     console.log("change is affected");
@@ -80,7 +85,7 @@ const Show = props => {
             size="small"
             color="primary"
             onClick={() => {
-              console.log(props.store.getState());
+              console.log(store);
             }}
           >
             Store
@@ -96,7 +101,7 @@ const Show = props => {
           </Button>
         </Box>
         <List className={classes.root}>
-          {store.getState().map((item, i) => {
+          {store.map((item, i) => {
             return (
               <ToDo
                 item={item}
